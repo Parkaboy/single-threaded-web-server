@@ -33,4 +33,9 @@ fn handle_connection(mut stream: TcpStream) {
 
     // Print the request lines
     println!("Request:\n{}", http_request.join("\n"));
+
+    let response = "HTTP/1.1 200 OK\r\n\r\nHello, world!";
+    stream
+        .write_all(response.as_bytes())
+        .expect("Failed to write response");
 }
