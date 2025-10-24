@@ -1,4 +1,7 @@
-use std::net::TcpListener;
+use std:: {
+    io::{prelude::*, BufReader}, net::{TcpListener, TcpStream}
+};
+
 
 fn main() {
     // Bind the TCP listener to the address and port
@@ -8,7 +11,7 @@ fn main() {
         match stream {
             Ok(_stream) => {
                 // Handle the connection
-                println!("New connection established!");
+                handle_connection(_stream);
             }
             Err(e) => {
                 // Handle the error
@@ -16,4 +19,18 @@ fn main() {
             }
         }
     }
+}
+
+
+fn handle_connection(mut stream: TcpStream) {
+    let reader = BufReader::new(&mut stream);
+
+    let http_request: Vec<String> = reader
+        .lines()
+        .map(|l| l.expect("Failed to read line"))
+        .take_while(|line| !line.is_empty())
+        .collect();
+
+    // Print the request lines
+    println!("Request:\n{}", http_request.join("\n"));
 }
